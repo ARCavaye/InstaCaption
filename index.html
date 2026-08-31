@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f4ed" />
+    <title>InstaCaption</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23e36d52' width='100' height='100'/><text x='50' y='65' font-size='60' font-weight='bold' fill='%23f6f4ed' text-anchor='middle' font-family='serif'>📸</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      :root { --ink:#1c2520; --muted:#667069; --paper:#f6f4ed; --line:#d8d8cd; --sage:#b9d6be; --mint:#e4f0e4; --coral:#e36d52; }
+      * { box-sizing:border-box; }
+      body { margin:0; min-height:100vh; color:var(--ink); background:linear-gradient(130deg, #f6f4ed 0%, #edf2e7 56%, #ddeae5 100%); font-family:"DM Mono", monospace; }
+      .shell { width:min(1120px, calc(100% - 40px)); margin:0 auto; padding:50px 0 40px; }
+      header { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; padding-bottom:34px; border-bottom:1px solid var(--ink); }
+      .brand { font:700 clamp(2.3rem, 6vw, 4.4rem)/.92 Fraunces, serif; letter-spacing:0; }
+      .brand span { color:var(--coral); }
+      header p { max-width:285px; margin:0; color:var(--muted); font-size:.72rem; line-height:1.65; }
+      main { display:grid; grid-template-columns:minmax(0, 1fr) minmax(360px, .9fr); gap:46px; padding-top:36px; }
+      h1 { margin:0 0 25px; font:600 1.45rem Fraunces, serif; letter-spacing:0; }
+      .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+      label { display:block; color:var(--muted); font-size:.66rem; letter-spacing:.07em; }
+      .full { grid-column:1 / -1; }
+      input, textarea { width:100%; margin-top:8px; padding:12px 0; border:0; border-bottom:1px solid var(--line); border-radius:0; outline:0; background:transparent; color:var(--ink); font:400 .88rem "DM Mono", monospace; transition:border-color .2s; }
+      textarea { min-height:112px; resize:vertical; line-height:1.55; }
+      input:focus, textarea:focus { border-color:var(--coral); }
+      input::placeholder, textarea::placeholder { color:#929b90; }
+      .hint { margin:9px 0 0; color:var(--muted); font-size:.63rem; line-height:1.45; }
+      .preview { position:sticky; top:24px; align-self:start; overflow:hidden; border:1px solid var(--ink); background:#fffefa; }
+      .preview-top { display:flex; justify-content:space-between; align-items:center; padding:13px 16px; background:var(--sage); border-bottom:1px solid var(--ink); font-size:.67rem; letter-spacing:.07em; }
+      .status { display:flex; align-items:center; gap:7px; color:#36513c; letter-spacing:0; }
+      .status i { width:13px; height:13px; }
+      pre { min-height:385px; margin:0; padding:25px 24px; overflow:auto; white-space:pre-wrap; word-break:break-word; font:400 .86rem/1.65 "DM Mono", monospace; }
+      .actions { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 16px; border-top:1px solid var(--line); background:#fafaf4; }
+      .actions small { color:var(--muted); font-size:.61rem; line-height:1.4; }
+      button { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:38px; padding:0 13px; border:1px solid var(--ink); border-radius:3px; background:var(--ink); color:#fffefa; cursor:pointer; font:500 .7rem "DM Mono", monospace; transition:transform .15s, background .15s; }
+      button:hover { background:var(--coral); transform:translateY(-1px); }
+      button i { width:15px; height:15px; }
+      footer { margin-top:35px; color:var(--muted); font-size:.63rem; line-height:1.5; }
+      @media (max-width:760px) { .shell { width:min(100% - 28px, 600px); padding-top:30px; } header { display:block; padding-bottom:27px; } header p { margin-top:16px; } main { grid-template-columns:1fr; gap:35px; padding-top:30px; } .preview { position:static; } pre { min-height:290px; padding:20px; } }
+      @media (max-width:440px) { .form-grid { grid-template-columns:1fr; } .full { grid-column:auto; } .actions small { max-width:145px; } }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <div class="brand">Insta<span>Caption</span></div>
+        <p>Turn field notes into a clean, Instagram-ready caption. The invisible line fillers stay with the copied text.</p>
+      </header>
+      <main>
+        <section aria-labelledby="details-heading">
+          <h1 id="details-heading">Post details</h1>
+          <form class="form-grid" id="caption-form">
+            <label class="full">Caption
+              <textarea id="caption" placeholder="A quiet moment from the field..." autofocus></textarea>
+            </label>
+            <label>Camera
+              <input id="camera" type="text" placeholder="Canon R6ii" />
+            </label>
+            <label>Lens
+              <input id="lens" type="text" placeholder="RF 100-500mm f4.5-7.1L" />
+            </label>
+            <label>Subject
+              <input id="subject" type="text" placeholder="Red fox" />
+            </label>
+            <label>Location
+              <input id="location" type="text" placeholder="Cairngorms, Scotland" />
+            </label>
+            <label class="full">Hashtags
+              <textarea id="hashtags" placeholder="#wildlifephotography #nature #scotland" aria-describedby="hashtag-hint"></textarea>
+              <p class="hint" id="hashtag-hint">Separate with spaces, commas, or new lines. The # is added when needed.</p>
+            </label>
+          </form>
+        </section>
+        <section class="preview" aria-labelledby="preview-heading">
+          <div class="preview-top">
+            <span id="preview-heading">Caption preview</span>
+            <span class="status"><i data-lucide="sparkles"></i>READY</span>
+          </div>
+          <pre id="output" aria-live="polite"></pre>
+          <div class="actions">
+            <small>Blank lines include Instagram-safe whitespace.</small>
+            <button id="copy-button" type="button"><i data-lucide="copy"></i><span>Copy caption</span></button>
+          </div>
+        </section>
+      </main>
+      <footer>Made for publishing from the field.</footer>
+    </div>
+    <script>
+      const blank = "\u2800";
+      const defaultCamera = "Canon R6ii";
+      const defaultLens = "RF 100-500mm f4.5-7.1L";
+      const fields = [...document.querySelectorAll("#caption-form input, #caption-form textarea")];
+      const output = document.querySelector("#output");
+      const copyButton = document.querySelector("#copy-button");
+
+      function value(id, fallback = "") {
+        return document.querySelector(`#${id}`).value.trim() || fallback;
+      }
+
+      function formattedHashtags() {
+        return value("hashtags")
+          .split(/[\s,]+/)
+          .filter(Boolean)
+          .map((tag) => `#${tag.replace(/^#+/, "")}`)
+          .join(" ");
+      }
+
+      function makeCaption() {
+        const metadata = [
+          `📸 ${value("camera", defaultCamera)} + ${value("lens", defaultLens)}`,
+          `🏷️ ${value("subject")}`,
+          `📍 ${value("location")}`,
+        ].join("\n");
+        return [value("caption"), blank, metadata, blank, formattedHashtags()].join("\n");
+      }
+
+      function updatePreview() {
+        output.textContent = makeCaption();
+      }
+
+      fields.forEach((field) => field.addEventListener("input", updatePreview));
+      copyButton.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(makeCaption());
+        copyButton.innerHTML = '<i data-lucide="check"></i><span>Copied</span>';
+        lucide.createIcons();
+        window.setTimeout(() => {
+          copyButton.innerHTML = '<i data-lucide="copy"></i><span>Copy caption</span>';
+          lucide.createIcons();
+        }, 1600);
+      });
+      updatePreview();
+      lucide.createIcons();
+    </script>
+  </body>
+</html>
